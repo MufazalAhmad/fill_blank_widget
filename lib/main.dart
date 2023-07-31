@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/data.dart';
 import 'package:untitled/question.dart';
 
 void main() {
@@ -31,14 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,36 +39,24 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // DynamicMCQQuestion(
-            //   questionText:
-            //       "This is \${[my]} school. This \${[school]} has four rooms.",
-            //   answerChoices: ["my", "is", "school", "cow"],
-            //   onAnswerSelected: (int selectedAnswer) {
-            //     // Do something with the selected answer
-            //   },
-            // ),
-            MCQQuestion(
-              question:
-                  '6.If your {[help]} is ill, or has a disability, and asks you to help them enter or leave your vehicle, make sure you check exactly what {[arm]} they are asking you for, for example to take hold of your{[passenger]}to support them.  ',
-              options: const ['Help', 'Arm', 'Passenger'],
-              onOptionSelected: (selectedOption) {
-                // Handle the selected option
-                print('Selected option: $selectedOption');
-              },
-            )
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          const SizedBox(height: 30),
+          ...questions
+              .map((e) => MCQQuestion(
+                    question: e.text ?? "",
+                    options: e.option ?? [],
+                    onOptionSelected: (selectedOption) {
+                      // Handle the selected option
+                      print('Selected option: $selectedOption');
+                    },
+                  ))
+              .toList(),
+        ]
 
             // Add more DynamicMCQWidget widgets as needed for other questions
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+            ),
       ),
     );
   }
@@ -129,7 +110,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
       textSpans.add(TextSpan(text: textBeforeMatch));
       textSpans.add(
         const WidgetSpan(
-          alignment: PlaceholderAlignment.bottom,
+          alignment: PlaceholderAlignment.middle,
           child: FillBlankWidget(),
         ),
       );
@@ -147,25 +128,29 @@ class _MCQQuestionState extends State<MCQQuestion> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: widget.options
-          .map((option) => Draggable(
-                data: option,
-                feedback: Material(
-                  child: Container(
-                    width: 100,
-                    height: 30,
-                    color: Colors.blue,
-                    child: Center(child: Text(option)),
+          .map((option) => Row(
+                children: [
+                  const SizedBox(width: 20),
+                  Draggable(
+                    data: option,
+                    feedback: Material(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        width: 100,
+                        height: 30,
+                        child: Text(option),
+                      ),
+                    ),
+                    childWhenDragging: Container(),
+                    child: Material(
+                      child: SizedBox(
+                        width: 100,
+                        height: 30,
+                        child: Text(option),
+                      ),
+                    ),
                   ),
-                ),
-                child: Material(
-                  child: Container(
-                    width: 100,
-                    height: 30,
-                    color: Colors.blue,
-                    child: Center(child: Text(option)),
-                  ),
-                ),
-                childWhenDragging: Container(),
+                ],
               ))
           .toList(),
     );

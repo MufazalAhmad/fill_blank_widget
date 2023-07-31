@@ -27,7 +27,7 @@ class DynamicMCQQuestion extends StatelessWidget {
 
       questionSpans.add(WidgetSpan(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black, width: 1),
             borderRadius: BorderRadius.circular(4),
