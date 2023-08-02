@@ -85,7 +85,6 @@ class _MCQQuestionState extends State<MCQQuestion> {
       children: [
         RichText(
           text: TextSpan(
-            style: DefaultTextStyle.of(context).style,
             children: _buildQuestionTextSpans(),
           ),
         ),
@@ -107,11 +106,18 @@ class _MCQQuestionState extends State<MCQQuestion> {
           match.group(0)!.replaceAll("{[", "").replaceAll("]}", "");
       currentIndex = match.end;
 
-      textSpans.add(TextSpan(text: textBeforeMatch));
       textSpans.add(
-        const WidgetSpan(
+        TextSpan(
+          text: textBeforeMatch,
+          style: const TextStyle(color: Colors.black),
+        ),
+      );
+      textSpans.add(
+        WidgetSpan(
           alignment: PlaceholderAlignment.middle,
-          child: FillBlankWidget(),
+          child: FillBlankWidget(
+            answer: matchedText,
+          ),
         ),
       );
     });
@@ -158,7 +164,11 @@ class _MCQQuestionState extends State<MCQQuestion> {
 }
 
 class FillBlankWidget extends StatefulWidget {
-  const FillBlankWidget({super.key});
+  final String answer;
+  const FillBlankWidget({
+    super.key,
+    required this.answer,
+  });
 
   @override
   State<FillBlankWidget> createState() => _FillBlankWidgetState();
@@ -166,6 +176,12 @@ class FillBlankWidget extends StatefulWidget {
 
 class _FillBlankWidgetState extends State<FillBlankWidget> {
   String? droppedOption;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
