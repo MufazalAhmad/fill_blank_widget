@@ -139,9 +139,6 @@ class _FillTheBlankQuestionState extends State<FillTheBlankQuestion> {
 
   List<InlineSpan> _buildQuestionTextSpans() {
     List<InlineSpan> textSpans = [];
-
-    TextSpan textSpan = TextSpan();
-
     final pattern = RegExp(r"{\[.*?\]}");
 
     int currentIndex = 0;
