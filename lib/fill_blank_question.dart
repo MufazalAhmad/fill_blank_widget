@@ -1,23 +1,23 @@
 class FillBlankQuestion {
-  String? text;
-  List<String>? option;
-  List<String>? answer;
+  final String text;
+  final List<String> options;
+  bool? isCorrect;
 
   FillBlankQuestion({
-    this.text,
-    this.option,
-    this.answer,
+    required this.text,
+    required this.options,
+    this.isCorrect,
   });
 
   FillBlankQuestion copyWith({
-    String? question,
+    String? text,
     List<String>? option,
-    List<String>? answer,
+    bool? isCorrect,
   }) {
     return FillBlankQuestion(
-      text: question ?? this.text,
-      option: option ?? this.option,
-      answer: answer ?? this.answer,
+      text: text ?? this.text,
+      options: option ?? this.options,
+      isCorrect: isCorrect ?? this.isCorrect,
     );
   }
 }
