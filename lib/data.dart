@@ -1,4 +1,4 @@
-import 'package:untitled/fill_blank_question.dart';
+import 'package:untitled/fill_blank_question_model.dart';
 
 List<FillBlankQuestion> questions = [
   FillBlankQuestion(
@@ -9,7 +9,7 @@ List<FillBlankQuestion> questions = [
   FillBlankQuestion(
     text:
         "If your {[help]} is ill, or has a disability, and asks you to help them enter or leave your vehicle, make sure you check exactly what {[arm]} they are asking you for, for example to take hold of your{[passenger]}to support them.",
-    options: ['Help', 'Arm', 'Passenger'],
+    options: ['help', 'arm', 'passenger'],
   ),
   FillBlankQuestion(
     text:

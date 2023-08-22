@@ -11,13 +11,18 @@ class FillBlankQuestion {
 
   FillBlankQuestion copyWith({
     String? text,
-    List<String>? option,
+    List<String>? options,
     bool? isCorrect,
   }) {
     return FillBlankQuestion(
       text: text ?? this.text,
-      options: option ?? this.options,
+      options: options ?? this.options,
       isCorrect: isCorrect ?? this.isCorrect,
     );
+  }
+
+  @override
+  String toString() {
+    return 'FillBlankQuestion{options: $options, isCorrect: $isCorrect}';
   }
 }
