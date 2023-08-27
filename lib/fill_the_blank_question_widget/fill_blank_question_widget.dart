@@ -1,52 +1,58 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/fill_the_blank_question_widget/fill_blank_options.dart';
 import 'package:untitled/fill_the_blank_question_widget/fill_blank_question_text_span.dart';
+import 'package:untitled/provider/fill_blanks_question_provider.dart';
 
-import '../data.dart';
 import '../fill_blank_question_model.dart';
 
-class FillTheBlankQuestion extends StatefulWidget {
+class FillTheBlankQuestion extends ConsumerStatefulWidget {
   final FillBlankQuestion question;
   final int index;
   final bool isTraining;
+  final bool showAllQuestionsAnswer;
 
   const FillTheBlankQuestion({
     super.key,
     required this.question,
     required this.index,
     required this.isTraining,
+    required this.showAllQuestionsAnswer,
   });
 
   @override
-  State<FillTheBlankQuestion> createState() => _FillTheBlankQuestionState();
+  ConsumerState<FillTheBlankQuestion> createState() =>
+      _FillTheBlankQuestionState();
 }
 
-class _FillTheBlankQuestionState extends State<FillTheBlankQuestion> {
+class _FillTheBlankQuestionState extends ConsumerState<FillTheBlankQuestion> {
   bool showAnswer = false;
-  bool reset = false;
-  late FillBlankQuestion question;
+
+  late List<String> selectedOption;
+
   List<bool> fillBlanksAnswers = [];
 
   @override
   void initState() {
     super.initState();
-    question = widget.question;
+    selectedOption = List.from(widget.question.options);
   }
 
   @override
   Widget build(BuildContext context) {
+    final reset = widget.question.reset;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
 
         FillBlankQuestionTextSpan(
-          questionText: question.text,
-          index: widget.index,
+          questionText: widget.question.text,
+          id: widget.question.id,
           reset: reset,
-          showAnswer: showAnswer,
+          showAnswer: widget.showAllQuestionsAnswer || showAnswer,
           onMatchedOption: (value) {
             if (value) {
               fillBlanksAnswers.add(true);
@@ -59,9 +65,9 @@ class _FillTheBlankQuestionState extends State<FillTheBlankQuestion> {
 
               final isCorrect = userAnswers.toSet();
               if (isCorrect.length == 1 && isCorrect.first == true) {
-                final updateQuestion = question.copyWith(isCorrect: true);
-                questions[widget.index] = updateQuestion;
-                print(questions);
+                ref
+                    .read(fillBlanksQuestionProvider.notifier)
+                    .setIsCorrect(widget.question.id, true);
               }
             }
           },
@@ -71,26 +77,31 @@ class _FillTheBlankQuestionState extends State<FillTheBlankQuestion> {
 
         /// [fill the blank options]
         FillBlanksOption(
-          reset: reset,
-          onChange: (value) {
-            reset = value;
-            log("reset :${reset.toString()}");
+          reset: widget.question.reset,
+          questionOptions: selectedOption,
+          onDragComplete: (value) {
+            setState(() {
+              selectedOption.remove(value);
+            });
           },
-          questionOptions: question.options,
         ),
 
-        /// [check question answer]
         if (widget.isTraining)
           Align(
             alignment: Alignment.centerRight,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                /// reset
+                /// [reset]
                 InkWell(
                   onTap: () {
-                    reset = true;
+                    ref
+                        .read(fillBlanksQuestionProvider.notifier)
+                        .reset(widget.question.id);
+                    selectedOption = List.from(widget.question.options);
+                    showAnswer = false;
                     fillBlanksAnswers.clear();
+
                     setState(() {});
                   },
                   child: const CircleAvatar(
@@ -98,6 +109,9 @@ class _FillTheBlankQuestionState extends State<FillTheBlankQuestion> {
                   ),
                 ),
                 const SizedBox(width: 30),
+
+                /// [check question answer]
+
                 InkWell(
                   onTap: () {
                     if (fillBlanksAnswers.length == 3) {

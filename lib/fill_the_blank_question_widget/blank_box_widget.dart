@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:untitled/provider/fill_blanks_question_provider.dart';
 
-class FillBlankBoxWidget extends StatefulWidget {
+class FillBlankBoxWidget extends ConsumerStatefulWidget {
   final String answer;
   final bool reset;
+  final int id;
   final bool showAnswer;
 
   final void Function(String) onDroppedOption;
   const FillBlankBoxWidget({
     super.key,
     required this.showAnswer,
+    required this.id,
     required this.answer,
     required this.reset,
     required this.onDroppedOption,
   });
 
   @override
-  State<FillBlankBoxWidget> createState() => _FillBlankBoxWidgetState();
+  ConsumerState<FillBlankBoxWidget> createState() => _FillBlankBoxWidgetState();
 }
 
-class _FillBlankBoxWidgetState extends State<FillBlankBoxWidget> {
+class _FillBlankBoxWidgetState extends ConsumerState<FillBlankBoxWidget> {
   String? droppedOption;
 
   @override
@@ -38,7 +42,7 @@ class _FillBlankBoxWidgetState extends State<FillBlankBoxWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.reset) {
-      droppedOption = null;
+      droppedOption = "";
     }
     return DragTarget<String>(
       builder: (context, candidateData, rejectedData) {
@@ -85,13 +89,16 @@ class _FillBlankBoxWidgetState extends State<FillBlankBoxWidget> {
         if (droppedOption != null && (droppedOption?.isNotEmpty ?? false)) {
           return false;
         }
+        if (widget.reset) {
+          ref.read(fillBlanksQuestionProvider.notifier).reset(widget.id);
+        }
         return true;
       },
       onAccept: (data) {
         widget.onDroppedOption(data);
-        setState(() {
-          droppedOption = data;
-        });
+        droppedOption = data;
+
+        setState(() {});
       },
       onLeave: (data) {},
     );

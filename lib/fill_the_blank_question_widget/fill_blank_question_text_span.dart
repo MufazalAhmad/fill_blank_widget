@@ -5,14 +5,14 @@ class FillBlankQuestionTextSpan extends StatelessWidget {
   const FillBlankQuestionTextSpan({
     super.key,
     required this.reset,
-    required this.index,
+    required this.id,
     required this.onMatchedOption,
     required this.showAnswer,
     required this.questionText,
   });
   final bool showAnswer;
   final bool reset;
-  final int index;
+  final int id;
   final String questionText;
   final void Function(bool value) onMatchedOption;
 
@@ -22,7 +22,7 @@ class FillBlankQuestionTextSpan extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: "${index + 1}) ",
+            text: "Q${id + 1}) ",
             style: TextStyle(
               color: Colors.purple.withOpacity(0.8),
               fontSize: 20,
@@ -63,6 +63,7 @@ class FillBlankQuestionTextSpan extends StatelessWidget {
             child: FillBlankBoxWidget(
               answer: matchedText,
               reset: reset,
+              id: id,
               showAnswer: showAnswer,
               onDroppedOption: (value) {
                 final isMatched = matchedText == value;

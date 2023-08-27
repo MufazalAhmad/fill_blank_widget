@@ -1,42 +1,25 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:untitled/data.dart';
 
-class FillBlanksOption extends StatefulWidget {
+class FillBlanksOption extends StatelessWidget {
   final bool reset;
-  final void Function(bool value) onChange;
+  final void Function(String value) onDragComplete;
   final List<String> questionOptions;
   const FillBlanksOption({
     super.key,
     required this.questionOptions,
     required this.reset,
-    required this.onChange,
+    required this.onDragComplete,
   });
 
   @override
-  State<FillBlanksOption> createState() => _FillBlanksOptionState();
-}
-
-class _FillBlanksOptionState extends State<FillBlanksOption> {
-  List<String> options = [];
-  bool reset = false;
-  @override
-  void initState() {
-    super.initState();
-
-    options = widget.questionOptions;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (widget.reset) {
-      options = widget.questionOptions;
-      widget.onChange(!reset);
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (int i = 0; i < options.length; i++)
+        for (int i = 0; i < questionOptions.length; i++)
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -48,29 +31,24 @@ class _FillBlanksOptionState extends State<FillBlanksOption> {
               ),
               const SizedBox(width: 10),
               Draggable(
-                data: options[i],
+                data: questionOptions[i],
                 feedback: Material(
                   child: Container(
                     alignment: Alignment.centerLeft,
                     width: 100,
                     height: 30,
-                    child: Center(child: Text(options[i])),
+                    child: Center(child: Text(questionOptions[i])),
                   ),
                 ),
                 child: Material(
                   child: SizedBox(
                     width: 100,
                     height: 30,
-                    child: Text(options[i]),
+                    child: Text(questionOptions[i]),
                   ),
                 ),
                 onDragCompleted: () {
-                  setState(() {
-                    options = options
-                        .where((element) => element != options[i])
-                        .toList();
-                    print(questions);
-                  });
+                  onDragComplete(questionOptions[i]);
                 },
               ),
             ],
