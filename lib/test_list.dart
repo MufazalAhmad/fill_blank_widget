@@ -29,7 +29,7 @@ class TestList extends ConsumerWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Test1(
+                          builder: (context) => Test1(
                                 title: "Training Test",
                                 isTraining: false,
                               )));
@@ -52,7 +52,7 @@ class TestList extends ConsumerWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Test1(
+                          builder: (context) => Test1(
                                 title: "Training Test",
                                 isTraining: true,
                               )));

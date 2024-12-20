@@ -5,8 +5,8 @@ import 'package:untitled/provider/fill_blanks_question_provider.dart';
 import '../data.dart';
 import 'fill_blank_question_widget.dart';
 
-class Test1 extends ConsumerWidget {
-  const Test1({
+class Test1 extends ConsumerStatefulWidget {
+  Test1({
     super.key,
     required this.title,
     required this.isTraining,
@@ -16,7 +16,16 @@ class Test1 extends ConsumerWidget {
   final bool isTraining;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Test1> createState() => _Test1State();
+}
+
+class _Test1State extends ConsumerState<Test1> {
+  int index = -1;
+
+  final PageController pageController = PageController(initialPage: 0);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -49,24 +58,19 @@ class Test1 extends ConsumerWidget {
           const SizedBox(height: 30),
           Consumer(builder: (context, ref, child) {
             final questions = ref.watch(fillBlanksQuestionProvider);
-            final showAllQuestionsAnswer = ref.watch(showAllAnswer);
             return Expanded(
-              child: ListView.builder(
-                  itemCount: questions.length,
-                  itemBuilder: (context, index) {
-                    final question = questions[index];
-                    return Column(
-                      children: [
-                        FillTheBlankQuestion(
-                          isTraining: isTraining,
-                          question: question,
-                          showAllQuestionsAnswer: showAllQuestionsAnswer,
-                          index: index,
-                        ),
-                        const SizedBox(height: 20)
-                      ],
-                    );
-                  }),
+              child: PageView(
+                controller: pageController,
+                children: questions.map((e) {
+                  index++;
+                  final question = e;
+                  return FillTheBlankQuestion(
+                    isTraining: widget.isTraining,
+                    question: question,
+                    index: index,
+                  );
+                }).toList(),
+              ),
             );
           })
         ]),

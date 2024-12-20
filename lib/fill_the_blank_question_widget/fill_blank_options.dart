@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:untitled/data.dart';
 
 class FillBlanksOption extends StatelessWidget {
   final bool reset;
